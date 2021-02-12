@@ -40,7 +40,8 @@
                     android:layout_weight="1"
                     android:contentDescription="TODO"
                     android:scaleType="fitXY"
-                    />
+                    android:visibility="@{viewModel.imageUrl != null ? View.VISIBLE: View.GONE}"
+                    app:imageResource="@{viewModel.imageUrl}" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
