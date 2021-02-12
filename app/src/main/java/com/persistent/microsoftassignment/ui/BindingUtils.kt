@@ -17,8 +17,8 @@ object BindingUtils {
     fun addVideoAdapter(recyclerView: RecyclerView, listPhotos: List<Result>?) {
         val adapter = recyclerView.adapter as VideoAdapter
         if (listPhotos != null && listPhotos.isNotEmpty()) {
-            adapter?.clearItems()
-            adapter?.addItems(listPhotos)
+            adapter.clearItems()
+            adapter.addItems(listPhotos)
         }
     }
     @JvmStatic

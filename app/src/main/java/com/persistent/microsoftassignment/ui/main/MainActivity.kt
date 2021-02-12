@@ -1,12 +1,10 @@
 package com.persistent.microsoftassignment.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.persistent.microsoftassignment.R
-
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import com.persistent.microsoftassignment.R
 import com.persistent.microsoftassignment.ui.main.videos.VideosFragment
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {

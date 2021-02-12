@@ -9,7 +9,7 @@ import com.persistent.microsoftassignment.R
 import com.persistent.microsoftassignment.databinding.ItemVideoBinding
 import com.persistent.microsoftassignment.models.Result
 
-class VideoAdapter() : RecyclerView.Adapter<VideoAdapter.ViewHolder>() {
+class VideoAdapter : RecyclerView.Adapter<VideoAdapter.ViewHolder>() {
 
     private val videoDetailsList: ArrayList<Result> = ArrayList()
 
