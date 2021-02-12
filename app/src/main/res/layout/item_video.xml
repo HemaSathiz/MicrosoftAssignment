@@ -44,7 +44,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:contentDescription="TODO"
-                    android:foreground="@drawable/gradient_image"
+                    android:foreground="@drawable/ic_gradient_image"
                     android:scaleType="fitXY"
                     android:visibility="@{viewModel.imageUrl != null ? View.VISIBLE: View.GONE}"
                     app:imageResource="@{viewModel.imageUrl}"
