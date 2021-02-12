@@ -14,33 +14,33 @@
 
     </data>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
-       >
+        android:background="@color/black">
 
-
-        <LinearLayout
-            android:id="@+id/linerlayout"
+        <TextView
+            android:id="@+id/txtExplore"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            >
+            android:layout_height="?attr/actionBarSize"
+            android:text="@string/explore"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/txt_size_18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/swipeRefresh"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/movieRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:videoadapter="@{viewModel.videoArrayList}"
-                    tools:listitem="@layout/item_video" />
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/movieRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/txtExplore"
+            app:layout_constraintStart_toStartOf="parent"
+            app:videoadapter="@{viewModel.videoArrayList}"
+            tools:listitem="@layout/item_video" />
 
 
         <androidx.core.widget.ContentLoadingProgressBar
@@ -48,7 +48,11 @@
             style="?android:attr/progressBarStyleInverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/movieRecyclerView" />
+
 
         <LinearLayout
             android:id="@+id/lin_fragment_video_linear_no_network_connection"
@@ -58,6 +62,10 @@
             android:layout_margin="@dimen/fragment_video_no_network_20dp"
             android:orientation="vertical"
             android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/movieRecyclerView"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
@@ -73,6 +81,7 @@
                 android:gravity="center"
                 android:text="@string/no_internet_connection" />
         </LinearLayout>
-    </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
