@@ -10,4 +10,5 @@
     <dimen name="fragment_videos_margin_20dp">20dp</dimen>
     <dimen name="item_video_20dp">20dp</dimen>
     <dimen name="item_video_10dp">10dp</dimen>
+    <dimen name="txt_size_20sp">20sp</dimen>
 </resources>

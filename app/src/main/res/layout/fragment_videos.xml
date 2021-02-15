@@ -28,7 +28,7 @@
             android:textColor="@color/white"
             android:gravity="center"
             android:textStyle="bold"
-            android:textSize="@dimen/txt_size_18sp"
+            android:textSize="@dimen/txt_size_20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
