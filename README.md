@@ -4,8 +4,27 @@
 This repository contains a detailed sample app that implements MVVM architecture 
 using Room, LiveData, Retrofit,DataBinding, ViewModel,RxJava.
 
+# Highlights
+
+1. MVVM Architectural pattern
+2. Offline Support
+3. Jetpack Components - Room, LiveData, DataBinding
+4. Unit test demonstration using JUnit and Mockito
+5. UI unit test demonstartion using Espresso
+6. Networking - Retrofit with RxJava
+
+The application has been built with **offline support**. It has been designed using **Android Architecture components** with **Room** for offline data caching. The application is built in such a way that whenvever there is a service call, the result will be stored in local database.
+
+The whole application is built based on the MVVM architectural pattern.
+
+# Application Architecture
+![alt text](https://cdn-images-1.medium.com/max/1600/1*OqeNRtyjgWZzeUifrQT-NA.png)
+
+The main advatage of using MVVM, there is no two way dependency between ViewModel and Model unlike MVP. Here the view can observe the datachanges in the viewmodel as we are using LiveData which is lifecycle aware. The viewmodel to view communication is achieved through observer pattern (basically observing the state changes of the data in the viewmodel).
+
 ![image](https://i.postimg.cc/mZPyKBMk/device-2021-02-15-103108.png)
 ![image](https://i.postimg.cc/QMPH7GMY/device-2021-02-15-103003.png)
+
 
 #### The app has following packages:
 1. **models**: It contains all the data accessing and manipulating components.
@@ -14,15 +33,18 @@ using Room, LiveData, Retrofit,DataBinding, ViewModel,RxJava.
 4. **helper**: It contains constant variables and common methods.
 5. **ui**: View classes along with their corresponding ViewModel.
 
+
+# Programming Practices Followed
+a) Android Architectural Components <br/>
+b) Dagger 2 for Dependency Injection <br/>
+c) MVVM <br/>
+d) Retrofit with Okhttp <br/>
+e) Room for data caching <br/>
+f) JUnit and Mockito for Unit testing <br/>
+d) Repository pattern <br/>
+
 #### Classes have been designed in such a way that it could be inherited and maximize the code reuse.
 ### Library reference resources:
 1. RxJava2: https://github.com/amitshekhariitbhu/RxJava2-Android-Samples
 2. Room: https://developer.android.com/topic/libraries/architecture/room.html
 
-### Concept reference resources:
-1. [The Best Android Networking Library for Fast and Easy Networking](https://blog.mindorks.com/simple-and-fast-android-networking-19ed860d1455#.cyzrve85o)
-2. [RxJava + Fast Android Networking](https://blog.mindorks.com/rxjava-fast-android-networking-6e3d90ee4387#.7hjoex22m)
-3. [Migrating from RxJava 1.0 to RxJava 2.0 and Learn RxJava by Examples](https://blog.mindorks.com/migrating-from-rxjava1-to-rxjava2-5dac0a94b4aa#.3lg46kora)
-4. [Debugging Android Databases And Shared Preferences In The Easiest Way](https://blog.mindorks.com/debugging-android-databases-and-shared-preferences-in-the-easiest-way-e5f705dfc06b#.pxw0hvnws)
-
-### Looking for MVVM Architecture for Beginners - [Check here](https://github.com/MindorksOpenSource/MVVM-Architecture-Android-Beginners)
