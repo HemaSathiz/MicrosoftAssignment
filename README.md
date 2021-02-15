@@ -4,6 +4,9 @@
 This repository contains a detailed sample app that implements MVVM architecture 
 using Room, LiveData, Retrofit,DataBinding, ViewModel,RxJava.
 
+![image](https://i.postimg.cc/mZPyKBMk/device-2021-02-15-103108.png)
+![image](https://i.postimg.cc/QMPH7GMY/device-2021-02-15-103003.png)
+
 #### The app has following packages:
 1. **models**: It contains all the data accessing and manipulating components.
 2. **api**: It contains network calls and its interface.
