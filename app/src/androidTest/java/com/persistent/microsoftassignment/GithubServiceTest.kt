@@ -3,7 +3,6 @@ package com.persistent.microsoftassignment
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.persistent.microsoftassignment.api.RestInterface
-import com.persistent.microsoftassignment.api.RetrofitClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers

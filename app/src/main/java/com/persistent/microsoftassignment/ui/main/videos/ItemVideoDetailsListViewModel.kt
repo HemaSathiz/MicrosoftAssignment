@@ -18,7 +18,7 @@ class ItemVideoDetailsListViewModel(row: Result) : BaseObservable() {
     init {
         title.set(row.title)
         description.set(row.overview)
-        year.set(getYearFromDate(row.release_date))
+        year.set(getYearFromDate(row.release_date!!))
         imageUrl.set(row.poster_path)
         raringBar.set(row.vote_average.toString())
         vote.set(row.vote_count.toString())

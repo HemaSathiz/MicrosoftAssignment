@@ -8,5 +8,5 @@ import retrofit2.http.Headers
 interface RestInterface {
     @Headers("Content-Type: application/json")
     @GET("3/movie/popular?api_key="+ ConstantHelper.API_KEY)
-    fun getVideoDetails(): io.reactivex.Observable<Movies>
+     fun getVideoDetails(): io.reactivex.Observable<Movies>
 }

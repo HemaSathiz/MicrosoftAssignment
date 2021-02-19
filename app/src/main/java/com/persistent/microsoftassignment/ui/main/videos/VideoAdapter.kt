@@ -4,18 +4,20 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.persistent.microsoftassignment.R
 import com.persistent.microsoftassignment.databinding.ItemVideoBinding
 import com.persistent.microsoftassignment.models.Result
 
-class VideoAdapter : RecyclerView.Adapter<VideoAdapter.ViewHolder>() {
+class VideoAdapter  : PagedListAdapter<Result, RecyclerView.ViewHolder>(UserDiffCallback) {
 
     private val videoDetailsList: ArrayList<Result> = ArrayList()
 
     override fun getItemCount() = videoDetailsList.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
+    override fun onCreateViewHolder(parent : ViewGroup, p1: Int): RecyclerView.ViewHolder {
         val binding: ItemVideoBinding = DataBindingUtil.inflate<ViewDataBinding>(
             LayoutInflater.from(parent.context),
             R.layout.item_video, parent, false
@@ -23,8 +25,8 @@ class VideoAdapter : RecyclerView.Adapter<VideoAdapter.ViewHolder>() {
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, p1: Int) {
-        holder.bind(videoDetailsList[p1])
+    override fun onBindViewHolder(holder:  RecyclerView.ViewHolder, p1: Int) {
+        (holder as ViewHolder).bind(videoDetailsList[p1])
     }
 
     fun addItems(arrayListUserGeographyDetails: List<Result>) {
@@ -46,6 +48,21 @@ class VideoAdapter : RecyclerView.Adapter<VideoAdapter.ViewHolder>() {
             itemListBinding.executePendingBindings()
         }
     }
+
+    companion object {
+        val UserDiffCallback = object : DiffUtil.ItemCallback<Result>() {
+
+            override fun areItemsTheSame(oldItem: Result, newItem: Result): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Result, newItem: Result): Boolean {
+                return oldItem.id == newItem.id
+            }
+        }
+    }
+
+
 
 
 }

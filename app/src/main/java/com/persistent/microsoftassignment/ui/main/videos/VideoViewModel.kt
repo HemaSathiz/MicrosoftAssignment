@@ -1,16 +1,18 @@
 package com.persistent.microsoftassignment.ui.main.videos
 
 import android.app.Activity
+import android.os.AsyncTask
+import android.os.Handler
+import android.os.Looper
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
-import com.persistent.microsoftassignment.api.AppUtils
-import com.persistent.microsoftassignment.database.DatabaseRepository
+import androidx.paging.PageKeyedDataSource
+import androidx.paging.PagedList
+import com.persistent.microsoftassignment.database.Repository
 import com.persistent.microsoftassignment.helper.ConstantHelper
 import com.persistent.microsoftassignment.helper.NetworkHelper
-import com.persistent.microsoftassignment.models.Movies
 import com.persistent.microsoftassignment.models.Result
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -18,53 +20,50 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.SocketTimeoutException
+import java.util.concurrent.Executor
+import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.Observable
+import javax.inject.Inject
 
+@HiltViewModel
+class VideoViewModel @Inject constructor(private val repository: Repository) : ViewModel(){
 
-class VideoViewModel : ViewModel(){
-
-    private var videoData = MutableLiveData<Movies>()
+    var videoData = MutableLiveData<PagedList<Result>>()
     var videoArrayList: ObservableList<Result> = ObservableArrayList()
     private var errorDetails = MutableLiveData<String>()
-    private var databaseRespository: DatabaseRepository? = null
 
 
-    fun fetchVideoDetails(activity: Activity, databaseRepository: DatabaseRepository) {
-        val repository = AppUtils.getSOService()
-        if (NetworkHelper.haveNetworkConnection(activity)) {
+    fun fetchVideoDetails(activity: Activity?) {
+        if (NetworkHelper.haveNetworkConnection(activity!!)) {
             CompositeDisposable().add(
-                repository.getVideoDetails()
+                Observable.just( repository.getVideoDetails())
+
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(
                         { result ->
-                            var movieDB = com.persistent.microsoftassignment.database.Movies()
-                            movieDB.jsonbody = Gson().toJson(result)
-                            deleteInsertMovieDetails(databaseRepository!!, movieDB)
-                            videoData.postValue(result)
-
+                            deleteInsertMovieDetails(result)
                         },
                         { error ->
                             loadError(error)
                         })
             )
         }else{
-            getMovieDetails(databaseRepository)
+            getMovieDetails()
         }
     }
 
-    fun deleteInsertMovieDetails(
-        databaseRepository: DatabaseRepository,
-        movieDB: com.persistent.microsoftassignment.database.Movies
+  fun deleteInsertMovieDetails(
+      movies: MutableLiveData<List<Result>>
     ){
         CompositeDisposable().add(
-            databaseRepository!!.deleteMovieDetails()
+                repository.deleteMovieDetails()
                 .subscribeOn(Schedulers.computation())
-                .flatMap { i -> databaseRepository.insertMovieData(movieDB) }
+                .flatMap { i -> repository.insertMovieData(movies.value!!) }
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     { result ->
-
-
+                        getMovieDetails()
                     },
 
                     { error ->
@@ -75,23 +74,24 @@ class VideoViewModel : ViewModel(){
     }
 
     fun getMovieDetails(
-        databaseRepository: DatabaseRepository
     ){
         CompositeDisposable().add(
-            databaseRepository!!.getMovieDetails()
-                .subscribeOn(Schedulers.computation())
-                .subscribe(
+            repository!!.getMovieDetails()
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
                     { result ->
-                        if (result.jsonbody != null) {
-                            val convertedObject = Gson().fromJson(
-                                result.jsonbody,
-                                Movies::class.java
-                            )
-                            videoData.postValue(convertedObject)
-                        } else {
-                            errorDetails.postValue(ConstantHelper.ERROR)
+                        val config = PagedList.Config.Builder()
+                                .setPageSize(5)
+                                .setEnablePlaceholders(false)
+                                .setInitialLoadSizeHint(5)
+                                .build()
 
-                        }
+                        val pagedList = PagedList.Builder(ListDataSource(result),config)
+                                .setNotifyExecutor (UiThreadExecutor ())
+                                .setFetchExecutor (AsyncTask.THREAD_POOL_EXECUTOR)
+                                .build ()
+                        videoData!!.postValue(pagedList!!)
                     },
 
                     { error ->
@@ -122,10 +122,6 @@ class VideoViewModel : ViewModel(){
         }
     }
 
-    fun getVideoDetails(): MutableLiveData<Movies> {
-        return videoData
-    }
-
     fun getErrorResponseVideoDetails(): MutableLiveData<String> {
         return errorDetails
     }
@@ -133,6 +129,27 @@ class VideoViewModel : ViewModel(){
     fun addVideoItemsToList(rows: List<Result>) {
         videoArrayList.clear()
         videoArrayList.addAll(rows)
+    }
+
+    inner class UiThreadExecutor: Executor {
+        private val handler = Handler (Looper.getMainLooper ())
+        override fun execute (command: Runnable) {
+            handler.post (command)
+        }
+    }
+
+   inner class ListDataSource (private val items: List<Result>): PageKeyedDataSource<Int, Result>() {
+        override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Result>) {
+            callback.onResult (items, 0, items.size)
+        }
+
+        override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Result>) {
+
+        }
+
+        override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Result>) {
+
+        }
     }
 
 

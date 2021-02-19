@@ -8,10 +8,11 @@ using Room, LiveData, Retrofit,DataBinding, ViewModel,RxJava.
 
 1. MVVM Architectural pattern
 2. Offline Support
-3. Jetpack Components - Room, LiveData, DataBinding
+3. Jetpack Components - Room, LiveData, DataBinding, Paging
 4. Unit test demonstration using JUnit and Mockito
 5. UI unit test demonstartion using Espresso
 6. Networking - Retrofit with RxJava
+7. Dependency Injection - Hilt
 
 The application has been built with **offline support**. It has been designed using **Android Architecture components** with **Room** for offline data caching. The application is built in such a way that whenvever there is a service call, the result will be stored in local database.
 
@@ -36,7 +37,7 @@ The main advatage of using MVVM, there is no two way dependency between ViewMode
 
 # Programming Practices Followed
 a) Android Architectural Components <br/>
-b) Dagger 2 for Dependency Injection <br/>
+b) Hilt for Dependency Injection <br/>
 c) MVVM <br/>
 d) Retrofit with Okhttp <br/>
 e) Room for data caching <br/>

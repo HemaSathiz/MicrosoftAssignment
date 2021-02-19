@@ -6,14 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.persistent.microsoftassignment.AppController
 import com.persistent.microsoftassignment.R
-import com.persistent.microsoftassignment.database.DatabaseRepository
 import com.persistent.microsoftassignment.databinding.FragmentVideosBinding
 import com.persistent.microsoftassignment.models.Result
-import kotlinx.android.synthetic.main.fragment_videos.*
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class VideosFragment : Fragment() {
 
     companion object {
@@ -21,13 +23,13 @@ class VideosFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentVideosBinding
-    private lateinit var viewModel: VideoViewModel
+     private val viewModel: VideoViewModel by viewModels()
     private var viewManager: LinearLayoutManager? = null
     private var viewAdapter: VideoAdapter? = null
     private  var videoDetails: List<Result> = ArrayList()
-    private  var databaseRepository: DatabaseRepository? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos, container, false)
         return binding.root
@@ -35,41 +37,35 @@ class VideosFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(VideoViewModel::class.java)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        databaseRepository = DatabaseRepository(activity!!)
-
-
-
-        viewManager = LinearLayoutManager(activity!!,LinearLayoutManager.VERTICAL,false)
+        viewManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         viewAdapter = VideoAdapter()
         binding.movieRecyclerView.setHasFixedSize(true)
         binding.movieRecyclerView.layoutManager = viewManager
         binding.movieRecyclerView.adapter = viewAdapter
 
-
         binding.progressBar.visibility = View.VISIBLE
+        viewModel.fetchVideoDetails(activity)
 
-        viewModel.getVideoDetails().observe(this, { response ->
-            if(response != null) {
-                lin_fragment_video_linear_no_network_connection.visibility = View.GONE
-                movieRecyclerView.visibility = View.VISIBLE
-                videoDetails = response.results
-                progressBar.visibility = View.GONE
-
-                viewModel.addVideoItemsToList(response.results)
+        viewModel.videoData.observe(viewLifecycleOwner, { response ->
+            if (response != null) {
+                binding.linFragmentVideoLinearNoNetworkConnection.visibility = View.GONE
+                binding.movieRecyclerView.visibility = View.VISIBLE
+                videoDetails = response
+                binding.progressBar.visibility = View.GONE
+                viewModel.addVideoItemsToList(response)
+               // viewAdapter!!.submitList(response)
             }
 
         })
 
-        viewModel.fetchVideoDetails(activity!!,databaseRepository!!)
 
-        viewModel.getErrorResponseVideoDetails().observe(this, { response ->
+        viewModel.getErrorResponseVideoDetails().observe(viewLifecycleOwner, { response ->
 
-            progressBar.visibility = View.GONE
-            lin_fragment_video_linear_no_network_connection.visibility = View.VISIBLE
-            movieRecyclerView.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
+            binding.linFragmentVideoLinearNoNetworkConnection.visibility = View.VISIBLE
+            binding.movieRecyclerView.visibility = View.GONE
 
         })
 
