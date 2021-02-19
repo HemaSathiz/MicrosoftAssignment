@@ -14,7 +14,7 @@ class Repository@Inject constructor(
     private val moviesDao: MoviesDao,
     private val apiService: RestInterface
 ) {
-    val data: MutableLiveData<List<Result>> = MutableLiveData<List<Result>>()
+    private val data: MutableLiveData<List<Result>> = MutableLiveData<List<Result>>()
 
     fun getVideoDetails(): MutableLiveData<List<Result>> {
         CompositeDisposable().add(

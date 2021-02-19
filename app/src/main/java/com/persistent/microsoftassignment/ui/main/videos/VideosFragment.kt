@@ -55,7 +55,6 @@ class VideosFragment : Fragment() {
                 videoDetails = response
                 binding.progressBar.visibility = View.GONE
                 viewModel.addVideoItemsToList(response)
-               // viewAdapter!!.submitList(response)
             }
 
         })

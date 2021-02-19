@@ -9,7 +9,7 @@ import java.util.*
 class ItemVideoDetailsListViewModel(row: Result) : BaseObservable() {
 
     var title: ObservableField<String> = ObservableField()
-     var description: ObservableField<String> = ObservableField()
+    var description: ObservableField<String> = ObservableField()
     var imageUrl: ObservableField<String> = ObservableField()
     var year: ObservableField<String> = ObservableField()
     var raringBar: ObservableField<String> = ObservableField()
@@ -25,10 +25,9 @@ class ItemVideoDetailsListViewModel(row: Result) : BaseObservable() {
 
     }
 
-    fun getYearFromDate(dateString : String): String {
+    private fun getYearFromDate(dateString: String): String {
         val fmt = SimpleDateFormat("yyyy-MM-dd")
         val date: Date = fmt.parse(dateString)
-
         val fmtOut = SimpleDateFormat("yyyy")
         return fmtOut.format(date)
     }

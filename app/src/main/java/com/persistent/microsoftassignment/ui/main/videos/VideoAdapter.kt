@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.persistent.microsoftassignment.R
 import com.persistent.microsoftassignment.databinding.ItemVideoBinding
 import com.persistent.microsoftassignment.models.Result
+import javax.inject.Inject
+import javax.inject.Singleton
+
 
 class VideoAdapter  : PagedListAdapter<Result, RecyclerView.ViewHolder>(UserDiffCallback) {
 

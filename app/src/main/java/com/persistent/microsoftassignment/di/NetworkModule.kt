@@ -4,6 +4,7 @@ import com.persistent.microsoftassignment.BuildConfig
 import com.persistent.microsoftassignment.api.RestInterface
 import com.persistent.microsoftassignment.helper.ConstantHelper
 import com.persistent.microsoftassignment.helper.NetworkHelper
+import com.persistent.microsoftassignment.ui.main.videos.VideoAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,5 +50,6 @@ object NetworkModule {
 
     @Provides
     fun provideApiService(retrofit: Retrofit) = retrofit.create(RestInterface::class.java)
+
 
 }

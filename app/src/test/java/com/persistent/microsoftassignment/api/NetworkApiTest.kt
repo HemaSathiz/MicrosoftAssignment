@@ -1,8 +1,7 @@
 
-package com.persistent.microsoftassignment
+package com.persistent.microsoftassignment.api
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.persistent.microsoftassignment.api.RestInterface
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -25,7 +24,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 @RunWith(JUnit4::class)
-class GithubServiceTest {
+class NetworkApiTest {
     @Rule
     @JvmField
     val instantExecutorRule = InstantTaskExecutorRule()

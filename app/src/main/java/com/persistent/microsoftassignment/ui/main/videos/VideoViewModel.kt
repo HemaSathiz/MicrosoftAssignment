@@ -73,7 +73,7 @@ class VideoViewModel @Inject constructor(private val repository: Repository) : V
         )
     }
 
-    fun getMovieDetails(
+    private fun getMovieDetails(
     ){
         CompositeDisposable().add(
             repository!!.getMovieDetails()
