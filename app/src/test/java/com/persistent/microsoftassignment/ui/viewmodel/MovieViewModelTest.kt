@@ -34,18 +34,18 @@ class MovieViewModelTest {
     @Before
     fun setup() {
         repository = Repository(database.movieDao(), service)
-        viewModel = VideoViewModel(repository)
+        viewModel = VideoViewModel(repository,service)
     }
 
     @Test
     @Throws(Exception::class)
     fun insertAndLoad() = runBlockingTest {
-        val article = TestUtil.createMovies()
-        database.movieDao().insertMovies(article)
+        val movies = TestUtil.createMovies()
+        database.movieDao().insertMovies(movies)
     }
 
     @Test
-    fun fetchArticleTest() = runBlockingTest {
+    fun fetchMoviesTest() = runBlockingTest {
         `when`(database.movieDao().getMovieDetails()).thenReturn(resultDetails)
 
         val value = database.movieDao().getMovieDetails()

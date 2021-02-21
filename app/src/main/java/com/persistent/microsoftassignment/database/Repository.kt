@@ -2,6 +2,7 @@ package com.persistent.microsoftassignment.database
 
 import androidx.lifecycle.MutableLiveData
 import com.persistent.microsoftassignment.api.RestInterface
+import com.persistent.microsoftassignment.models.Movies
 import com.persistent.microsoftassignment.models.Result
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,16 +15,16 @@ class Repository@Inject constructor(
     private val moviesDao: MoviesDao,
     private val apiService: RestInterface
 ) {
-    private val data: MutableLiveData<List<Result>> = MutableLiveData<List<Result>>()
+    private val data: MutableLiveData<Movies> = MutableLiveData<Movies>()
 
-    fun getVideoDetails(): MutableLiveData<List<Result>> {
+    fun getVideoDetails(): MutableLiveData<Movies> {
         CompositeDisposable().add(
             apiService!!.getVideoDetails()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { result ->
-                        data.setValue(result.results.toList());
+                        data.setValue(result);
                     },
 
                     { error ->

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.persistent.microsoftassignment.AppController
 import com.persistent.microsoftassignment.R
 import com.persistent.microsoftassignment.databinding.FragmentVideosBinding
@@ -23,13 +24,14 @@ class VideosFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentVideosBinding
-     private val viewModel: VideoViewModel by viewModels()
+    private val viewModel: VideoViewModel by viewModels()
     private var viewManager: LinearLayoutManager? = null
     private var viewAdapter: VideoAdapter? = null
-    private  var videoDetails: List<Result> = ArrayList()
+    private var videoDetails: List<Result> = ArrayList()
+    private var scrollStatus: Boolean? = false
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_videos, container, false)
         return binding.root
@@ -55,6 +57,7 @@ class VideosFragment : Fragment() {
                 videoDetails = response
                 binding.progressBar.visibility = View.GONE
                 viewModel.addVideoItemsToList(response)
+                viewAdapter!!.submitList(response)
             }
 
         })
@@ -67,6 +70,17 @@ class VideosFragment : Fragment() {
             binding.movieRecyclerView.visibility = View.GONE
 
         })
+
+       /* binding.movieRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    if (!scrollStatus!!) {
+                        viewModel.getMovieDetails()
+                    }
+                }
+            }
+        })*/
 
     }
 

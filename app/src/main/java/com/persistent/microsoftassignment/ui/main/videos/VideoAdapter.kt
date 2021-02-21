@@ -29,7 +29,8 @@ class VideoAdapter  : PagedListAdapter<Result, RecyclerView.ViewHolder>(UserDiff
     }
 
     override fun onBindViewHolder(holder:  RecyclerView.ViewHolder, p1: Int) {
-        (holder as ViewHolder).bind(videoDetailsList[p1])
+
+        (holder as ViewHolder).bind( getItem(p1)!!)
     }
 
     fun addItems(arrayListUserGeographyDetails: List<Result>) {

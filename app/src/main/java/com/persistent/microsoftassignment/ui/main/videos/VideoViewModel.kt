@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PageKeyedDataSource
 import androidx.paging.PagedList
+import com.persistent.microsoftassignment.api.RestInterface
 import com.persistent.microsoftassignment.database.Repository
 import com.persistent.microsoftassignment.helper.ConstantHelper
 import com.persistent.microsoftassignment.helper.NetworkHelper
@@ -26,27 +27,35 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 @HiltViewModel
-class VideoViewModel @Inject constructor(private val repository: Repository) : ViewModel(){
+class VideoViewModel @Inject constructor(private val repository: Repository,private val apiService: RestInterface) : ViewModel(){
 
     var videoData = MutableLiveData<PagedList<Result>>()
     var videoArrayList: ObservableList<Result> = ObservableArrayList()
     private var errorDetails = MutableLiveData<String>()
+     var pageSize : String? = "20"
+    lateinit var maximumPageSize : String
 
 
     fun fetchVideoDetails(activity: Activity?) {
         if (NetworkHelper.haveNetworkConnection(activity!!)) {
             CompositeDisposable().add(
-                Observable.just( repository.getVideoDetails())
+                    apiService!!.getVideoDetails()
+                            .subscribeOn(Schedulers.newThread())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    { result ->
+                                        var movieDetails = result!!
+                                        pageSize = movieDetails!!.page.toString()
+                                        maximumPageSize = movieDetails!!.total_results.toString()
+                                        deleteInsertMovieDetails(movieDetails!!.results.toList())
+                                    },
 
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                        { result ->
-                            deleteInsertMovieDetails(result)
-                        },
-                        { error ->
-                            loadError(error)
-                        })
+                                    { error ->
+                                        errorDetails.postValue(ConstantHelper.ERROR)
+
+
+                                    })
+
             )
         }else{
             getMovieDetails()
@@ -54,12 +63,12 @@ class VideoViewModel @Inject constructor(private val repository: Repository) : V
     }
 
   fun deleteInsertMovieDetails(
-      movies: MutableLiveData<List<Result>>
+      movies: List<Result>
     ){
         CompositeDisposable().add(
                 repository.deleteMovieDetails()
                 .subscribeOn(Schedulers.computation())
-                .flatMap { i -> repository.insertMovieData(movies.value!!) }
+                .flatMap { i -> repository.insertMovieData(movies) }
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     { result ->
@@ -73,7 +82,7 @@ class VideoViewModel @Inject constructor(private val repository: Repository) : V
         )
     }
 
-    private fun getMovieDetails(
+     fun getMovieDetails(
     ){
         CompositeDisposable().add(
             repository!!.getMovieDetails()
@@ -82,12 +91,12 @@ class VideoViewModel @Inject constructor(private val repository: Repository) : V
                     .subscribe(
                     { result ->
                         val config = PagedList.Config.Builder()
-                                .setPageSize(5)
+                                .setPageSize(pageSize!!.toInt())
                                 .setEnablePlaceholders(false)
-                                .setInitialLoadSizeHint(5)
+                                .setInitialLoadSizeHint(20)
                                 .build()
 
-                        val pagedList = PagedList.Builder(ListDataSource(result),config)
+                        val pagedList = PagedList.Builder(ListDataSource(StringListProvider(result)),config)
                                 .setNotifyExecutor (UiThreadExecutor ())
                                 .setFetchExecutor (AsyncTask.THREAD_POOL_EXECUTOR)
                                 .build ()
@@ -138,16 +147,31 @@ class VideoViewModel @Inject constructor(private val repository: Repository) : V
         }
     }
 
-   inner class ListDataSource (private val items: List<Result>): PageKeyedDataSource<Int, Result>() {
-        override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Result>) {
-            callback.onResult (items, 0, items.size)
-        }
+   inner class ListDataSource (val provider: StringListProvider): PageKeyedDataSource<Int, Result>() {
+       override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Result>) {
+           val list = provider.getStringList(0, params.requestedLoadSize)
+           callback.onResult(list, 0, 1)
+       }
 
-        override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Result>) {
+       override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Result>) {
 
-        }
+       }
 
-        override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Result>) {
+       override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Result>) {
+
+       }
+
+
+    }
+
+    inner class StringListProvider(private var list : List<Result>) {
+
+
+        fun getStringList(page: Int, pageSize: Int): List<Result> {
+
+            val initialIndex = page * pageSize
+            val finalIndex = initialIndex + pageSize
+                return list.subList(initialIndex, finalIndex)
 
         }
     }
