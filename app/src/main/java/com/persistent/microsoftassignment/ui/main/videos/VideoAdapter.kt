@@ -14,9 +14,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-class VideoAdapter  : PagedListAdapter<Result, RecyclerView.ViewHolder>(UserDiffCallback) {
+class VideoAdapter @Inject constructor()  : PagedListAdapter<Result, RecyclerView.ViewHolder>(UserDiffCallback) {
 
-    private val videoDetailsList: ArrayList<Result> = ArrayList()
+     val videoDetailsList: ArrayList<Result> = ArrayList()
 
     override fun getItemCount() = videoDetailsList.size
 

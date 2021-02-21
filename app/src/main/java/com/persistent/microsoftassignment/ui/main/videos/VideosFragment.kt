@@ -15,6 +15,7 @@ import com.persistent.microsoftassignment.R
 import com.persistent.microsoftassignment.databinding.FragmentVideosBinding
 import com.persistent.microsoftassignment.models.Result
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class VideosFragment : Fragment() {
@@ -26,9 +27,10 @@ class VideosFragment : Fragment() {
     private lateinit var binding: FragmentVideosBinding
     private val viewModel: VideoViewModel by viewModels()
     private var viewManager: LinearLayoutManager? = null
-    private var viewAdapter: VideoAdapter? = null
+
+    @Inject
+    lateinit var viewAdapter: VideoAdapter
     private var videoDetails: List<Result> = ArrayList()
-    private var scrollStatus: Boolean? = false
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -42,7 +44,7 @@ class VideosFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         viewManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        viewAdapter = VideoAdapter()
+
         binding.movieRecyclerView.setHasFixedSize(true)
         binding.movieRecyclerView.layoutManager = viewManager
         binding.movieRecyclerView.adapter = viewAdapter
@@ -70,17 +72,6 @@ class VideosFragment : Fragment() {
             binding.movieRecyclerView.visibility = View.GONE
 
         })
-
-       /* binding.movieRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1)) {
-                    if (!scrollStatus!!) {
-                        viewModel.getMovieDetails()
-                    }
-                }
-            }
-        })*/
 
     }
 

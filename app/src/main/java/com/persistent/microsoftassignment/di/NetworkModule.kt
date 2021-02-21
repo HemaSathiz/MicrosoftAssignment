@@ -57,5 +57,6 @@ object NetworkModule {
     @Provides
     fun provideApiService(retrofit: Retrofit) = retrofit.create(RestInterface::class.java)
 
-
+    @Provides
+    fun provideAdapter(): VideoAdapter = VideoAdapter()
 }
